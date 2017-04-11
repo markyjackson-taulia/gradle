@@ -83,6 +83,7 @@ import org.gradle.initialization.ProjectAccessListener;
 import org.gradle.internal.component.external.model.ModuleComponentArtifactMetadata;
 import org.gradle.internal.installation.CurrentGradleInstallation;
 import org.gradle.internal.logging.progress.ProgressLoggerFactory;
+import org.gradle.internal.operations.BuildOperationProcessor;
 import org.gradle.internal.progress.BuildOperationExecutor;
 import org.gradle.internal.reflect.Instantiator;
 import org.gradle.internal.resource.cached.ByUrlCachedExternalResourceIndex;
@@ -273,8 +274,10 @@ class DependencyManagementBuildScopeServices {
                                                                 List<ResolverProviderFactory> resolverFactories,
                                                                 ImmutableAttributesFactory cache,
                                                                 ImmutableModuleIdentifierFactory moduleIdentifierFactory,
-                                                                ModuleExclusions moduleExclusions) {
+                                                                ModuleExclusions moduleExclusions,
+                                                                BuildOperationProcessor buildOperationProcessor) {
         return new DefaultArtifactDependencyResolver(
+            buildOperationProcessor,
             resolverFactories,
             resolveIvyFactory,
             dependencyDescriptorFactory,
