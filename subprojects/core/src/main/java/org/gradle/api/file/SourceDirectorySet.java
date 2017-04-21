@@ -17,6 +17,7 @@ package org.gradle.api.file;
 
 import org.gradle.api.Describable;
 import org.gradle.api.Named;
+import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.util.PatternFilterable;
 import org.gradle.model.internal.core.UnmanagedStruct;
 
@@ -99,4 +100,12 @@ public interface SourceDirectorySet extends FileTree, PatternFilterable, Named, 
      * @return The filter patterns.
      */
     PatternFilterable getFilter();
+
+    /**
+     * TODO: Something
+     * @return The output directory for this set of sources.
+     */
+    File getOutputDir();
+
+    void setOutputDir(Provider<File> outputDir);
 }

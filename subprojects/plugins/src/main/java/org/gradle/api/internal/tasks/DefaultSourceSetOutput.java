@@ -16,20 +16,15 @@
 
 package org.gradle.api.internal.tasks;
 
-import com.google.common.collect.Maps;
-import org.gradle.api.Transformer;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.internal.file.CompositeFileCollection;
 import org.gradle.api.internal.file.FileResolver;
 import org.gradle.api.internal.file.collections.DefaultConfigurableFileCollection;
 import org.gradle.api.internal.file.collections.FileCollectionResolveContext;
 import org.gradle.api.tasks.SourceSetOutput;
-import org.gradle.util.CollectionUtils;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -37,16 +32,19 @@ public class DefaultSourceSetOutput extends CompositeFileCollection implements S
     private final DefaultConfigurableFileCollection outputDirectories;
     private Object resourcesDir;
     private Object classesDir;
+    private FileCollection classesDirs;
+
     private final DefaultConfigurableFileCollection dirs;
-    private final Map<SourceDirectorySet, Object> classesDirsPerSourceDirectorySet;
-    private final DefaultConfigurableFileCollection classesDirs;
     private final FileResolver fileResolver;
 
     public DefaultSourceSetOutput(String sourceSetDisplayName, final FileResolver fileResolver, TaskResolver taskResolver) {
         this.fileResolver = fileResolver;
         String displayName = sourceSetDisplayName + " classes";
-        outputDirectories = new DefaultConfigurableFileCollection(displayName, fileResolver, taskResolver, new Callable() {
+        this.outputDirectories = new DefaultConfigurableFileCollection(displayName, fileResolver, taskResolver, new Callable() {
             public Object call() throws Exception {
+                if (classesDir!=null) {
+                    return fileResolver.resolve(classesDir);
+                }
                 return getClassesDirs();
             }
         }, new Callable() {
@@ -55,25 +53,10 @@ public class DefaultSourceSetOutput extends CompositeFileCollection implements S
             }
         });
 
-        dirs = new DefaultConfigurableFileCollection("dirs", fileResolver, taskResolver);
+        this.dirs = new DefaultConfigurableFileCollection("dirs", fileResolver, taskResolver);
 
-        classesDirsPerSourceDirectorySet = Maps.newLinkedHashMap();
-        classesDirs = new DefaultConfigurableFileCollection("classesDirs", fileResolver, taskResolver, new Callable() {
-            @Override
-            public Object call() throws Exception {
-                if (classesDir!=null) {
-                    return Collections.singleton(fileResolver.resolve(classesDir));
-                }
-                return CollectionUtils.collect(classesDirsPerSourceDirectorySet.entrySet(), new LinkedHashSet<File>(), new Transformer<File, Map.Entry<SourceDirectorySet, Object>>() {
-                    @Override
-                    public File transform(Map.Entry<SourceDirectorySet, Object> entry) {
-                        return fileResolver.resolve(entry.getValue());
-                    }
-                });
-            }
-        });
         // TODO: This should be more specific to just the tasks that create the class files?
-        classesDirs.builtBy(this);
+        this.classesDirs = new DefaultConfigurableFileCollection("classesDirs", fileResolver, taskResolver).builtBy(this);
     }
 
     @Override
@@ -90,12 +73,8 @@ public class DefaultSourceSetOutput extends CompositeFileCollection implements S
         if (classesDir!=null) {
             return fileResolver.resolve(classesDir);
         }
-
-        if (classesDirsPerSourceDirectorySet.isEmpty()) {
-            return null;
-        }
         // TODO: log deprecation?
-        return fileResolver.resolve(CollectionUtils.first(classesDirsPerSourceDirectorySet.entrySet()).getValue());
+        return null;
     }
 
     public void setClassesDir(Object classesDir) {
@@ -103,21 +82,12 @@ public class DefaultSourceSetOutput extends CompositeFileCollection implements S
     }
 
     @Override
-    public void addClassesDir(SourceDirectorySet sourceDirectorySet, Object classesDir) {
-        classesDirsPerSourceDirectorySet.put(sourceDirectorySet, classesDir);
-    }
-
-    @Override
-    public File getClassesDirFor(SourceDirectorySet sourceDirectorySet) {
-        if (classesDir!=null) {
-            return fileResolver.resolve(classesDir);
-        }
-        return fileResolver.resolve(classesDirsPerSourceDirectorySet.get(sourceDirectorySet));
-    }
-
-    @Override
     public FileCollection getClassesDirs() {
         return classesDirs;
+    }
+
+    public void setClassesDirs(FileCollection classesDirs) {
+        this.classesDirs = classesDirs;
     }
 
     public File getResourcesDir() {
