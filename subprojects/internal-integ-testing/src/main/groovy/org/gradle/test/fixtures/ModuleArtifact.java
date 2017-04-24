@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact;
+package org.gradle.test.fixtures;
 
-/**
- * A ResolvedArtifactSet instance where the set of resolved artifacts may change over time.
- */
-public interface DynamicResolvedArtifactSet extends ResolvedArtifactSet {
+import org.gradle.test.fixtures.file.TestFile;
+
+public interface ModuleArtifact {
     /**
-     * Produce a static snapshot of this artifact set.
+     * Returns the path of this artifact relative to the root of the repository.
      */
-    ResolvedArtifactSet snapshot();
+    String getPath();
+
+    /**
+     * Returns the local backing file of this artifact.
+     */
+    TestFile getFile();
 }

@@ -14,36 +14,27 @@
  * limitations under the License.
  */
 
-package org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact;
+package org.gradle.api.internal.artifacts;
 
-import org.gradle.api.internal.attributes.AttributeContainerInternal;
-import org.gradle.api.tasks.TaskDependency;
 import org.gradle.internal.operations.BuildOperationQueue;
+import org.gradle.internal.operations.MultipleBuildOperationFailures;
 import org.gradle.internal.operations.RunnableBuildOperation;
 
-import java.util.Collection;
-
-public class EmptyResolvedVariant implements ResolvedVariant {
-    private final AttributeContainerInternal variantAttributes;
-
-    public EmptyResolvedVariant(AttributeContainerInternal variantAttributes) {
-        this.variantAttributes = variantAttributes;
+public class TestBuildOperationQueue<T extends RunnableBuildOperation> implements BuildOperationQueue<T> {
+    @Override
+    public void add(T operation) {
+        operation.run();
     }
 
     @Override
-    public AttributeContainerInternal getAttributes() {
-        return variantAttributes;
+    public void cancel() {
     }
 
     @Override
-    public void collectBuildDependencies(Collection<? super TaskDependency> dest) {
+    public void waitForCompletion() throws MultipleBuildOperationFailures {
     }
 
     @Override
-    public void addPrepareActions(BuildOperationQueue<RunnableBuildOperation> actions, ArtifactVisitor visitor) {
-    }
-
-    @Override
-    public void visit(ArtifactVisitor visitor) {
+    public void setLogLocation(String logLocation) {
     }
 }

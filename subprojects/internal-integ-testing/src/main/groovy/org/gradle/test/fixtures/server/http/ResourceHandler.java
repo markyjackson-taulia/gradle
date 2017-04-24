@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact;
 
-import org.gradle.api.artifacts.ResolvedArtifact;
+package org.gradle.test.fixtures.server.http;
 
-interface ArtifactFailuresCollector {
-    void addFailure(ResolvedArtifact resolvedArtifact, Throwable err);
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+
+interface ResourceHandler {
+    String getPath();
+
+    void writeTo(HttpExchange exchange) throws IOException;
 }

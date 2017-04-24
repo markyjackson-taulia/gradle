@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package org.gradle.api.internal.artifacts.transform;
+package org.gradle.test.fixtures.server.http;
 
-import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.ResolvedArtifactSet;
-import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.ResolvedVariant;
-import org.gradle.api.internal.attributes.AttributesSchemaInternal;
+import com.sun.net.httpserver.HttpExchange;
 
-import java.util.Collection;
+import java.io.IOException;
 
-public interface VariantSelector {
-    ResolvedArtifactSet select(Collection<? extends ResolvedVariant> candidates, AttributesSchemaInternal producerSchema);
+class SimpleResourceHandler implements ResourceHandler, BlockingHttpServer.Resource {
+    private final String path;
+
+    public SimpleResourceHandler(String path) {
+        this.path = path;
+    }
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public void writeTo(HttpExchange exchange) throws IOException {
+        exchange.sendResponseHeaders(200, 0);
+        exchange.getResponseHeaders().add("RESPONSE", "done");
+    }
 }

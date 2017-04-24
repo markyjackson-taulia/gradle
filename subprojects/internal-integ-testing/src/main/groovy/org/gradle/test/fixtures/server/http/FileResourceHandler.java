@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-package org.gradle.api.internal.changedetection.state;
+package org.gradle.test.fixtures.server.http;
 
-import org.gradle.initialization.RootBuildLifecycleListener;
+import com.google.common.io.Files;
+import com.sun.net.httpserver.HttpExchange;
 
 import java.io.File;
+import java.io.IOException;
 
-public class BuildScopeFileTimeStampInspector extends FileTimeStampInspector implements RootBuildLifecycleListener {
-    public BuildScopeFileTimeStampInspector(File workDir) {
-        super(workDir);
+class FileResourceHandler implements BlockingHttpServer.Resource, ResourceHandler {
+    private final String path;
+    private final File file;
+
+    public FileResourceHandler(String path, File file) {
+        this.path = path;
+        this.file = file;
     }
 
     @Override
-    public String toString() {
-        return "build scope cache";
+    public String getPath() {
+        return path;
     }
 
     @Override
-    public void afterStart() {
-        updateOnStartBuild();
-    }
-
-    @Override
-    public void beforeComplete() {
-        updateOnFinishBuild();
+    public void writeTo(HttpExchange exchange) throws IOException {
+        exchange.sendResponseHeaders(200, file.length());
+        Files.copy(file, exchange.getResponseBody());
     }
 }

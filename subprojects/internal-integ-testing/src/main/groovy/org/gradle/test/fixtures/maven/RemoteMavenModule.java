@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.gradle.api.internal.artifacts.transform;
+package org.gradle.test.fixtures.maven;
 
-import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.ResolvedArtifactSet;
-import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.ResolvedVariant;
-import org.gradle.api.internal.attributes.AttributesSchemaInternal;
+import org.gradle.test.fixtures.resource.RemoteArtifact;
 
-import java.util.Collection;
+public interface RemoteMavenModule extends MavenModule {
+    RemoteArtifact getPom();
 
-public interface VariantSelector {
-    ResolvedArtifactSet select(Collection<? extends ResolvedVariant> candidates, AttributesSchemaInternal producerSchema);
+    RemoteArtifact getArtifact();
 }
