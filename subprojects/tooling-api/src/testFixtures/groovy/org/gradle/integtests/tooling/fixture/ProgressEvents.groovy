@@ -77,7 +77,7 @@ class ProgressEvents implements ProgressListener {
                     if (!skipValidation && uniqueBuildOperation(descriptor)) {
                         if (descriptor.displayName in ['Configure settings', 'Configure build', 'Calculate task graph', 'Run tasks']
                             || descriptor.displayName.contains('/maven-metadata.xml') || descriptor.displayName.startsWith('Apply plugin ') || descriptor.displayName.startsWith('Configure project ')
-                            || descriptor.displayName.startsWith('Resolve artifacts') || descriptor.displayName.startsWith('Executing ')) {
+                            || descriptor.displayName.startsWith('Resolve artifacts') || descriptor.displayName.startsWith('Executing ')|| descriptor.displayName.startsWith('Resolving ')) {
                             // Ignore this for now
                         } else {
                             def duplicateName = operations.find({
