@@ -171,6 +171,7 @@ abstract class TestLauncherSpec extends ToolingApiSpecification {
             sourceSets {
                 moreTests {
                     java.srcDir "src/test"
+                    output.classesDir = file("build/classes/moreTests")
                     compileClasspath = compileClasspath + sourceSets.test.compileClasspath
                     runtimeClasspath = runtimeClasspath + sourceSets.test.runtimeClasspath
                 }

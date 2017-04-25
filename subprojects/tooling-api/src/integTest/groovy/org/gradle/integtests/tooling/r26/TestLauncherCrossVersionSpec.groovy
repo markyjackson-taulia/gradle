@@ -40,8 +40,6 @@ import org.gradle.util.GradleVersion
 @ToolingApiVersion(">=2.6")
 @TargetGradleVersion(">=2.6")
 class TestLauncherCrossVersionSpec extends TestLauncherSpec {
-
-
     public static final GradleVersion GRADLE_VERSION_34 = GradleVersion.version("3.4")
 
     def "test launcher api fires progress events"() {
@@ -435,6 +433,7 @@ class TestLauncherCrossVersionSpec extends TestLauncherSpec {
             sourceSets {
                 moreTests {
                     java.srcDir "src/test"
+                    output.classesDir = file("build/classes/moreTests")
                     compileClasspath = compileClasspath + sourceSets.test.compileClasspath
                     runtimeClasspath = runtimeClasspath + sourceSets.test.runtimeClasspath
                 }
