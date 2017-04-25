@@ -33,6 +33,7 @@ import org.gradle.platform.base.BinarySpec;
 import org.gradle.platform.base.BinaryTasksCollection;
 import org.gradle.platform.base.ComponentSpec;
 import org.gradle.platform.base.internal.*;
+import org.gradle.util.CollectionUtils;
 
 import java.io.File;
 
@@ -106,7 +107,7 @@ public class DefaultClassDirectoryBinarySpec extends AbstractBuildableComponentS
     }
 
     public File getClassesDir() {
-        return sourceSet.getOutput().getClassesDir();
+        return CollectionUtils.findSingle(sourceSet.getOutput().getClassesDirs().getFiles());
     }
 
     public void setClassesDir(File classesDir) {
