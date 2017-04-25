@@ -56,9 +56,11 @@ class JavaPluginIntegrationTest extends AbstractIntegrationSpec {
             public class Main {}
         """
         when:
+        executer.expectDeprecationWarning()
         succeeds("assemble")
         then:
         file("build/classes/java/main").assertDoesNotExist()
         file("build/classes/main/Main.class").assertExists()
+        result.assertOutputContains("Using a single directory for all classes from a source set.")
     }
 }
