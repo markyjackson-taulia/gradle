@@ -19,24 +19,24 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
 import org.gradle.test.fixtures.AbstractProjectBuilderSpec
 
-public class OsgiPluginTest extends AbstractProjectBuilderSpec {
-    private final OsgiPlugin osgiPlugin = new OsgiPlugin();
+class OsgiPluginTest extends AbstractProjectBuilderSpec {
+    private final OsgiPlugin osgiPlugin = new OsgiPlugin()
 
-    public void appliesTheJavaPlugin() {
-        osgiPlugin.apply(project);
+    void appliesTheJavaPlugin() {
+        osgiPlugin.apply(project)
 
         expect:
         project.plugins.hasPlugin('java-base')
         project.convention.plugins.osgi instanceof OsgiPluginConvention
     }
 
-    public void addsAnOsgiManifestToTheDefaultJar() {
+    void addsAnOsgiManifestToTheDefaultJar() {
         project.apply(plugin: 'java')
-        osgiPlugin.apply(project);
+        osgiPlugin.apply(project)
 
         expect:
         OsgiManifest osgiManifest = project.jar.manifest
         osgiManifest.classpath == project.configurations."$JavaPlugin.RUNTIME_CONFIGURATION_NAME"
-        osgiManifest.classesDir == project.sourceSets."$SourceSet.MAIN_SOURCE_SET_NAME".output.classesDir
+        osgiManifest.classesDir == project.sourceSets."$SourceSet.MAIN_SOURCE_SET_NAME".java.outputDir
     }
 }

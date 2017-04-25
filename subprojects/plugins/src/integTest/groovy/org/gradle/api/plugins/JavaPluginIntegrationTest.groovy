@@ -34,7 +34,7 @@ class JavaPluginIntegrationTest extends AbstractIntegrationSpec {
                     assert component.rebuildTasks == [ BasePlugin.CLEAN_TASK_NAME, JavaBasePlugin.BUILD_TASK_NAME]
                     assert component.buildTasks == [ JavaBasePlugin.BUILD_TASK_NAME ]
                     assert component.runtimeClasspath != null
-                    assert component.compileDependencies == project.configurations.compile
+                    assert component.compileDependencies == project.configurations.compileClasspath
                 }
             }
         """

@@ -83,7 +83,7 @@ class ScalaBasePluginTest {
         assertThat(task, instanceOf(ScalaCompile.class))
         assertThat(task.description, equalTo('Compiles the custom Scala source.'))
         assertThat(task.classpath.files as List, equalTo([
-            customSourceSet.output.getClassesDirFor(customSourceSet.java)
+            customSourceSet.java.outputDir
         ]))
         assertThat(task.source as List, equalTo(customSourceSet.scala as List))
         assertThat(task, dependsOn('compileCustomJava'))
