@@ -26,7 +26,6 @@ import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.bundling.Jar;
-import org.gradle.util.CollectionUtils;
 
 import java.io.File;
 
@@ -46,26 +45,21 @@ public class OsgiPlugin implements Plugin<Project> {
                 Jar jarTask = (Jar) project.getTasks().getByName("jar");
                 OsgiManifest osgiManifest = osgiConvention.osgiManifest();
 
-                final FileCollection classes = project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().getByName("main").getOutput().getClassesDirs();
                 // When creating the OSGi manifest, we must have a single view of all of the classes included in the jar.
-                final File singleClassesDirectory;
-                if (classes.getFiles().size() > 1) {
-                    singleClassesDirectory = new File(jarTask.getTemporaryDir(), "osgi-classes");
-                    jarTask.doFirst(new Action<Task>() {
-                        @Override
-                        public void execute(Task task) {
-                            project.sync(new Action<CopySpec>() {
-                                @Override
-                                public void execute(CopySpec copySpec) {
-                                    copySpec.from(classes);
-                                    copySpec.into(singleClassesDirectory);
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    singleClassesDirectory = CollectionUtils.single(classes);
-                }
+                final File singleClassesDirectory = new File(jarTask.getTemporaryDir(), "osgi-classes");
+                jarTask.doFirst(new Action<Task>() {
+                    @Override
+                    public void execute(Task task) {
+                        project.sync(new Action<CopySpec>() {
+                            @Override
+                            public void execute(CopySpec copySpec) {
+                                final FileCollection classes = project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().getByName("main").getOutput().getClassesDirs();
+                                copySpec.from(classes);
+                                copySpec.into(singleClassesDirectory);
+                            }
+                        });
+                    }
+                });
                 osgiManifest.setClassesDir(singleClassesDirectory);
                 osgiManifest.setClasspath(project.getConfigurations().getByName("runtime"));
 

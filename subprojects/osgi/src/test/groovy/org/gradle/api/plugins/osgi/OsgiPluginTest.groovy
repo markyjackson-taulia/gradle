@@ -16,7 +16,6 @@
 package org.gradle.api.plugins.osgi
 
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.SourceSet
 import org.gradle.test.fixtures.AbstractProjectBuilderSpec
 
 class OsgiPluginTest extends AbstractProjectBuilderSpec {
@@ -37,6 +36,6 @@ class OsgiPluginTest extends AbstractProjectBuilderSpec {
         expect:
         OsgiManifest osgiManifest = project.jar.manifest
         osgiManifest.classpath == project.configurations."$JavaPlugin.RUNTIME_CONFIGURATION_NAME"
-        osgiManifest.classesDir == project.sourceSets."$SourceSet.MAIN_SOURCE_SET_NAME".java.outputDir
+        osgiManifest.classesDir == temporaryFolder.file("build/tmp/jar/osgi-classes")
     }
 }
