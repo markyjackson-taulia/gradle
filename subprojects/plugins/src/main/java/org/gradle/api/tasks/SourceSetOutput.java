@@ -33,6 +33,7 @@ import java.util.Map;
  *   main {
  *     //if you truly want to override the defaults:
  *     output.resourcesDir = 'out/res'
+ *     // This will cause all languages to use the same output directory
  *     output.classesDir   = 'out/bin'
  *   }
  * }
@@ -85,8 +86,10 @@ public interface SourceSetOutput extends FileCollection {
      * <p>
      * See example at {@link SourceSetOutput}
      *
-     * @return The classes dir. Never returns null.
+     * @return The classes dir.
+     * @deprecated Use {@link #getClassesDirs()}
      */
+    @Deprecated
     File getClassesDir();
 
     /**
@@ -95,7 +98,9 @@ public interface SourceSetOutput extends FileCollection {
      * See example at {@link SourceSetOutput}
      *
      * @param classesDir the classes dir. Should not be null.
+     * @deprecated Set the output directory for the particular {@link org.gradle.api.file.SourceDirectorySet} or use {@link #setClassesDirs(FileCollection)}
      */
+    @Deprecated
     void setClassesDir(Object classesDir);
 
     /**
@@ -105,6 +110,11 @@ public interface SourceSetOutput extends FileCollection {
      */
     FileCollection getClassesDirs();
 
+    /**
+     * Sets the collection of directories that compiled classes are assembled into.
+     *
+     * @param classesDirs the classes dirs. Should not be null.
+     */
     void setClassesDirs(FileCollection classesDirs);
 
     /**

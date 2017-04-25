@@ -10,7 +10,7 @@
             </thead>
             <tr>
                 <td>testClassesDir</td>
-                <td><literal>project.sourceSets.test.output.classesDir</literal></td>
+                <td></td>
             </tr>
             <tr>
                 <td>testClassesDirs</td>

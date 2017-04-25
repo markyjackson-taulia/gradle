@@ -102,10 +102,15 @@ public interface SourceDirectorySet extends FileTree, PatternFilterable, Named, 
     PatternFilterable getFilter();
 
     /**
-     * TODO: Something
+     * Returns the directory to put the output for these sources.
+     *
      * @return The output directory for this set of sources.
      */
     File getOutputDir();
 
+    /**
+     * Sets the directory to assemble the compiled classes into.
+     * @param outputDir
+     */
     void setOutputDir(Provider<File> outputDir);
 }
