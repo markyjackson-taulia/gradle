@@ -41,4 +41,24 @@ class JavaPluginIntegrationTest extends AbstractIntegrationSpec {
         expect:
         succeeds "expect"
     }
+
+    def "settings classesDir restores old behavior"() {
+        buildFile << """
+            apply plugin: 'java'
+            
+            def oldPath = file("build/classes/main")
+            sourceSets.main.output.classesDir = oldPath
+            assert sourceSets.main.java.outputDir == oldPath
+            assert sourceSets.main.output.classesDir == oldPath
+            assert sourceSets.main.output.classesDirs.contains(oldPath) 
+        """
+        file("src/main/java/Main.java") << """
+            public class Main {}
+        """
+        when:
+        succeeds("assemble")
+        then:
+        file("build/classes/java/main").assertDoesNotExist()
+        file("build/classes/main/Main.class").assertExists()
+    }
 }
